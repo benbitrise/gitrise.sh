@@ -47,6 +47,13 @@ testBranchOption(){
     assertEquals "${expected_branch}" "${actual_branch}"
 }
 
+testCommitMessageOption(){
+    local expected_message="test_message"
+    source ./gitrise.sh -m "test_message"
+    local actual_message="$COMMIT_MESSAGE"
+    assertEquals "${expected_message}" "${actual_message}"
+}
+
 testTagAndCommitOptions() {
     local expected_tag="test_tag"
     local expected_commit="test_commit"

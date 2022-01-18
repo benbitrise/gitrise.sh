@@ -4,7 +4,7 @@
 # shellcheck disable=SC2120
 # disables "foo references arguments, but none are ever passed."
 
-VERSION="0.8.0"
+VERSION="0.9.0"
 APP_NAME="Gitrise"
 STATUS_POLLING_INTERVAL=30
 
@@ -18,21 +18,22 @@ log_url=""
 
 function usage() {
     echo ""
-    echo "Usage: gitrise.sh [-d] [-e] [-h] [-T] [-v]  -a token -s project_slug -w workflow [-b branch|-t tag|-c commit]"
+    echo "Usage: gitrise.sh [-d] [-e] [-h] [-T] [-v]  -a token -s project_slug -w workflow [-b branch|-t tag|-c commit] -m commit_message"
     echo 
-    echo "  -a, --access-token  <string>    Bitrise access token"
-    echo "  -b, --branch        <string>    Git branch"
-    echo "  -c, --commit        <string>    Git commit hash "
+    echo "  -a, --access-token   <string>    Bitrise access token"
+    echo "  -b, --branch         <string>    Git branch"
+    echo "  -c, --commit         <string>    Git commit hash "
+    echo "  -m, --commit_message <string>    Git commit hash "
     echo "  -d, --debug                     Debug mode enabled"
-    echo "  -e, --env           <string>    List of environment variables in the form of key1:value1,key2:value2"
+    echo "  -e, --env            <string>    List of environment variables in the form of key1:value1,key2:value2"
     echo "  -h, --help                      Print this help text"
     echo "  -p, --poll           <string>   Polling interval (in seconds) to get the build status."
     echo "      --stream                    Stream build logs"
-    echo "  -s, --slug          <string>    Bitrise project slug"
+    echo "  -s, --slug           <string>    Bitrise project slug"
     echo "  -T, --test                      Test mode enabled"
-    echo "  -t, --tag           <string>    Git tag"
+    echo "  -t, --tag            <string>    Git tag"
     echo "  -v, --version                   App version"
-    echo "  -w, --workflow      <string>    Bitrise workflow"
+    echo "  -w, --workflow       <string>    Bitrise workflow"
     echo 
 }
 
@@ -50,6 +51,10 @@ while [ $# -gt 0 ]; do
     ;;
     -c|--commit)
         COMMIT="$2"
+        shift;shift
+    ;;
+    -m|--commit_message)
+        COMMIT_MESSAGE="$2"
         shift;shift
     ;;
     -t|--tag)
@@ -168,6 +173,7 @@ function generate_build_payload() {
   "build_params": {
     "branch": "$BRANCH",
     "commit_hash": "$COMMIT",
+    "commit_message": "$COMMIT_MESSAGE",
     "tag": "$TAG",
     "workflow_id" : "$WORKFLOW",
     "environments": $environments
